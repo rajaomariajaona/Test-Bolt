@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Kid {
+  id        String     @id @default(uuid())
+  name      String
+  qrCode    String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  attendances Attendance[]
+}
+
+model Event {
+  id        String     @id @default(uuid())
+  name      String
+  date      DateTime
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  attendances Attendance[]
+}
+
+model Attendance {
+  id        String     @id @default(uuid())
+  kidId     String
+  eventId   String
+  checkInTime DateTime @default(now())
+  kid       Kid        @relation(fields: [kidId], references: [id])
+  event     Event      @relation(fields: [eventId], references: [id])
+}
+
+model Admin {
+  id        String     @id @default(uuid())
+  username  String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
